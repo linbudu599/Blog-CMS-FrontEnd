@@ -15,28 +15,28 @@ const RootRouter = () => {
   const [logined, setLogined] = useState(false);
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    (async () => {
-      const {
-        data: { ans }
-      } = await get(`/login?token=${token}`);
-      if (ans) {
-        setLogined(true);
-      }
-    })();
-    return () => {};
-  }, [token]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const {
+  //       data: { ans }
+  //     } = await get(`/login?token=${token}`);
+  //     if (ans) {
+  //       setLogined(true);
+  //     }
+  //   })();
+  //   return () => {};
+  // }, [token]);
   return (
     <Router>
-      <Route exact path="/login" component={Login} />
-      <Route  path="/admin" component={Admin} />
-      <Route
+      <Route exact path="/" component={Login} />
+      <Route path="/admin" component={Admin} />
+      {/* <Route
         exact
         path="/"
         render={() =>
           logined ? <Redirect to="/home" /> : <Redirect to="/login" />
         }
-      />
+      /> */}
     </Router>
   );
 };

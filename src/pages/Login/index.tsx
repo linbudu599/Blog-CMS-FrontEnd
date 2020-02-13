@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Input, Typography, Icon, Form, Button, Spin } from "antd";
-
+import { Input, Typography, Icon, Form, Button, Spin, message } from "antd";
+import axios from "axios";
+import { withRouter } from "react-router";
 import { FormComponentProps } from "antd/es/form";
 
 import "./index.css";
@@ -9,6 +10,7 @@ const { Title, Text } = Typography;
 const { Item } = Form;
 const { Password } = Input;
 
+// TODO: Package Request
 // TODO: Bg Img
 // TODO: Validate (use inside validator)
 // TODO: Performance
@@ -25,7 +27,7 @@ const Login: React.FC<FormComponentProps> = ({
     isFieldTouched
   }
 }) => {
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,19 +37,41 @@ const Login: React.FC<FormComponentProps> = ({
   //   return () => {};
   // }, [validateFields]);
 
-  const checkLogin = (e: any) => {
+  const checkLogin = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      localStorage.setItem("token", "fake_token");
-      window.location.replace("/admin");
-    }, 1000);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   localStorage.setItem("token", "fake_token");
+    //   window.location.replace("/admin");
+    // }, 1000);
     validateFields({
       force: true
     });
 
-    console.log(getFieldsValue());
+    const res = await axios({
+      method: "POST",
+      url: "http://127.0.0.1:7001/admin/login",
+      data: {
+        username,
+        password
+      },
+      withCredentials: true
+    });
+    console.log(res);
+    setIsLoading(false);
+
+    if (res.data.code === 0) {
+      message.success("登陆成功");
+      localStorage.setItem("token", "fake_token");
+      localStorage.setItem("openId", res.data.openId);
+      window.location.replace("/admin");
+      // history.pushState("/admin", "", "/admin");
+    } else {
+      message.error("登陆失败啦");
+    }
+
+    // console.log(getFieldsValue());
   };
 
   const usernameError = isFieldTouched("username") && getFieldError("username");
@@ -68,14 +92,14 @@ const Login: React.FC<FormComponentProps> = ({
               rules: [{ required: true, message: "用户名不能为空哟" }]
             })(
               <Input
-                id="userName"
+                id="username"
                 size="large"
-                placeholder="Enter your userName"
+                placeholder="Enter your username"
                 prefix={
                   <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                 }
                 onChange={e => {
-                  setUserName(e.target.value);
+                  setUsername(e.target.value);
                 }}
               />
             )}
