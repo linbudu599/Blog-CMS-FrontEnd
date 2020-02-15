@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { List, Row, Col, Modal, message, Button, Switch } from "antd";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
-import "./index.css"
+import "./index.css";
 
 const { confirm } = Modal;
-
 
 interface IListItem {
   [x: string]: any;
 }
+interface IArticleInfo {
+  title: string;
+  typeName: string;
+  addTime: string;
+  view_count: string;
+  id: number;
+}
 
-const ArticleList: React.FC<IListItem> = props => {
+const ArticleList: React.FC<IListItem> = ({ history }) => {
   const [list, setList] = useState([]);
   useEffect(() => {
     getList();
   }, []);
+
   const getList = () => {
     axios({
       url: "http://127.0.0.1:7001/admin/getArticleList",
@@ -26,6 +34,25 @@ const ArticleList: React.FC<IListItem> = props => {
         setList(res.data.list);
       } else {
         message.error("获取数据失败咯");
+      }
+    });
+  };
+
+  //删除文章的方法
+  const delArticle = (id: number) => {
+    confirm({
+      title: "确定要删除这篇博客文章吗?",
+      content: "文章将会永远被删除，无法恢复。",
+      onOk() {
+        axios("http://127.0.0.1:7001/admin/delArticle" + id, {
+          withCredentials: true
+        }).then(res => {
+          message.success("文章删除成功");
+          getList();
+        });
+      },
+      onCancel() {
+        message.success("取消删除");
       }
     });
   };
@@ -55,7 +82,7 @@ const ArticleList: React.FC<IListItem> = props => {
         }
         bordered
         dataSource={list}
-        renderItem={(item: any) => (
+        renderItem={(item: IArticleInfo) => (
           <List.Item>
             <Row className="list-div">
               <Col span={8}>{item.title}</Col>
@@ -64,11 +91,23 @@ const ArticleList: React.FC<IListItem> = props => {
               <Col span={4}>{item.view_count}</Col>
 
               <Col span={4}>
-                <Button type="primary" size="small">
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={() => {
+                    history.push("/admin/update/" + item.id);
+                  }}
+                >
                   修改
                 </Button>
                 &nbsp;
-                <Button type="danger" size="small">
+                <Button
+                  type="danger"
+                  size="small"
+                  onClick={() => {
+                    delArticle(item.id);
+                  }}
+                >
                   删除
                 </Button>
               </Col>
@@ -80,4 +119,4 @@ const ArticleList: React.FC<IListItem> = props => {
   );
 };
 
-export default ArticleList;
+export default withRouter(ArticleList);

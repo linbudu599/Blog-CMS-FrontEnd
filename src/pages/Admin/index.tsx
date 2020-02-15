@@ -5,6 +5,7 @@ import { Layout, Menu, Breadcrumb, Icon } from "antd";
 import { Route, Link } from "react-router-dom";
 import Create from "../Create";
 import List from "../List";
+import Update from "../Update";
 
 import "./index.css";
 
@@ -46,6 +47,7 @@ const LayoutComponent = () => {
             <div>
               <Route path="/admin/index" exact component={Create} />
               <Route path="/admin/list" exact component={List} />
+              <Route path="/admin/update/:id" component={Update} />
             </div>
           </div>
         </Content>
