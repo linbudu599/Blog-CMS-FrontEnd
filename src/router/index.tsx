@@ -3,14 +3,6 @@ import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Admin from "../pages/Admin";
 import Login from "../pages/Login";
 
-const get = async (token: string) => {
-  return {
-    data: {
-      ans: true
-    }
-  };
-};
-
 const RootRouter = () => {
   const [logined, setLogined] = useState(false);
   const token = localStorage.getItem("token");
