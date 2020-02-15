@@ -85,24 +85,23 @@ const CreateArticle = () => {
     message.success("检验通过");
 
     let content = {
-      type_id: articleId,
+      type_id: selectedType,
       title: articleTitle,
       article_content: articleContent,
       intro: introContent,
       addTime: new Date(createAt.replace("-", "/")).getTime() / 1000
     };
 
-    console.log(content);
-
     if (articleId === 0) {
-      Object.assign({}, content, {
-        view_count: 0
+      const createInfo = Object.assign({}, content, {
+        view_count: Math.ceil(Math.random() * 100) + 1000
       });
+      console.log(createInfo);
 
       axios({
         method: "POST",
         url: "http://127.0.0.1:7001/admin/addArticle",
-        data: content,
+        data: createInfo,
         withCredentials: true
       }).then((res: any) => {
         setArticleId(res.data.insertId);
@@ -113,14 +112,14 @@ const CreateArticle = () => {
         }
       });
     } else {
-      Object.assign({}, content, {
+      const updateInfo = Object.assign({}, content, {
         id: articleId
       });
-
+      console.log(updateInfo);
       axios({
         method: "POST",
         url: "http://127.0.0.1:7001/admin/updateArticle",
-        data: content,
+        data: updateInfo,
         withCredentials: true
       }).then((res: any) => {
         if (res.data.isScuccess) {

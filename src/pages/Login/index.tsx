@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Input, Typography, Icon, Form, Button, Spin, message } from "antd";
 import axios from "axios";
-import { withRouter } from "react-router";
 import { FormComponentProps } from "antd/es/form";
 
 import "./index.css";
@@ -40,11 +39,6 @@ const Login: React.FC<FormComponentProps> = ({
   const checkLogin = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    //   localStorage.setItem("token", "fake_token");
-    //   window.location.replace("/admin");
-    // }, 1000);
     validateFields({
       force: true
     });
@@ -66,16 +60,13 @@ const Login: React.FC<FormComponentProps> = ({
       localStorage.setItem("token", "fake_token");
       localStorage.setItem("openId", res.data.openId);
       window.location.replace("/admin");
-      // history.pushState("/admin", "", "/admin");
     } else {
       message.error("登陆失败啦");
     }
-
-    // console.log(getFieldsValue());
   };
 
-  const usernameError = isFieldTouched("username") && getFieldError("username");
-  const passwordError = isFieldTouched("password") && getFieldError("password");
+  // const usernameError = isFieldTouched("username") && getFieldError("username");
+  // const passwordError = isFieldTouched("password") && getFieldError("password");
 
   const hasErrors = (fieldsError: any) => {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
