@@ -4,31 +4,21 @@ import Admin from "../pages/Admin";
 import Login from "../pages/Login";
 
 const RootRouter = () => {
-  const [logined, setLogined] = useState(false);
+  const [logined, setLogined] = useState(true);
   const token = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const {
-  //       data: { ans }
-  //     } = await get(`/login?token=${token}`);
-  //     if (ans) {
-  //       setLogined(true);
-  //     }
-  //   })();
-  //   return () => {};
-  // }, [token]);
+  // TODO: auth at initialize
   return (
     <Router>
-      <Route exact path="/" component={Login} />
-      <Route path="/admin" component={Admin} />
-      {/* <Route
+      <Route
         exact
         path="/"
         render={() =>
-          logined ? <Redirect to="/home" /> : <Redirect to="/login" />
+          logined ? <Redirect to="/admin" /> : <Redirect to="/login" />
         }
-      /> */}
+      />
+      <Route path="/login" component={Login} />
+      <Route path="/admin" component={Admin} />
     </Router>
   );
 };

@@ -60,6 +60,7 @@ const ArticleList: React.FC<IListItem> = ({ history }) => {
   return (
     <div>
       <List
+        style={{ height: "100%" }}
         header={
           <Row className="list-div">
             <Col span={8}>
